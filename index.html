@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hartley Brook Primary: Attendance Pathway with Audio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #28a745;
+            --accent-color: #ffc107;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .slide-title {
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .slide-logo {
+            width: 80px;
+            height: auto;
+            margin-left: 10px;
+        }
+
+        .slide-number {
+            font-size: 14px;
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .slide-content {
+            margin-bottom: 20px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .nav-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #003d7a;
+        }
+
+        .nav-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 10px;
+            font-size: 20px;
+            margin: 20px 0 15px;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background-color: rgba(255, 193, 7, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .info-box {
+            background-color: rgba(0, 86, 179, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .tip-box {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .tip-box::before {
+            content: "💡 Tip: ";
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .col-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .col-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .audio-container {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .audio-label {
+            display: block;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .infographic {
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .infographic img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            color: var(--primary-color);
+        }
+
+        .traffic-light {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .red {
+            background-color: #ff6b6b;
+        }
+
+        .amber {
+            background-color: #ffd166;
+        }
+
+        .green {
+            background-color: #06d6a0;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .contact-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .contact-table th,
+        .contact-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .contact-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Flow chart styling */
+        .flowchart {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .flowchart-step {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fff;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .flowchart-time {
+            font-weight: bold;
+            min-width: 120px;
+            color: var(--primary-color);
+        }
+
+        .flowchart-task {
+            flex-grow: 1;
+        }
+
+        /* Graduated response visual */
+        .graduated-response {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+
+        .response-step {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .response-step::after {
+            content: "↓";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+
+        .response-step:last-child::after {
+            content: none;
+        }
+
+        .response-step.voluntary {
+            border-left: 4px solid #28a745;
+        }
+
+        .response-step.formal {
+            border-left: 4px solid #ffc107;
+        }
+
+        .response-step.legal {
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="navigation">
+            <button id="prevBtn" class="nav-button"><i class="fas fa-chevron-left"></i> Previous</button>
+            <div id="slideCounter" class="text-center">Slide 1 of 21</div>
+            <button id="nextBtn" class="nav-button">Next <i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <div class="slide active" id="slide1">
+            <div class="slide-header">
+                <div class="slide-title">Attendance Pathway for Hartley Brook Primary</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">1/21</div>
+            </div>
+            <div class="slide-content text-center">
+                <h1 class="text-4xl font-bold text-center my-8">Attendance Matters:<br>A Whole-School Approach</h1>
+                <p class="text-xl mb-6">A comprehensive guide to the graduated approach to attendance</p>
+                <p class="text-lg mb-10">August 2024</p>
+                <div class="info-box">
+                    <p>This presentation outlines the school's approach to attendance, from early intervention through to formal processes. It's designed to support the attendance management team, including Reception staff, Attendance Team, SLT, DSL, and SEND Coordinators.</p>
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%201%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide2">
+            <div class="slide-header">
+                <div class="slide-title">Core Principles</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">2/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Our Approach to Attendance</h2>
+                <ol class="list-decimal ml-6">
+                    <li class="mb-3">
+                        <h3 class="font-bold text-lg text-green-700">High Expectations and Positive Recognition</h3>
+                        <p>We set ambitious expectations for every pupil’s attendance, grounded in the belief that excellent attendance opens doors to learning and opportunity. We celebrate consistent attendance and improvements through visible incentives and recognition, making it clear that attending school every day matters.</p>
+                    </li>
+                    <li class="mb-3">
+                        <h3 class="font-bold text-lg text-green-700">Building Strong Relationships with Families</h3>
+                        <p>We work in partnership with families, valuing trust and understanding as the foundation of all attendance conversations. Our approach prioritises empathy, listening, and shared responsibility—ensuring families feel supported rather than judged.</p>
+                    </li>
+                    <li class="mb-3">
+                        <h3 class="font-bold text-lg text-green-700">Early Identification and Timely Support</h3>
+                        <p>We monitor attendance patterns closely to spot concerns early and prevent them from becoming entrenched. Swift, appropriate support is offered to address issues before they escalate—keeping children connected to school and learning.</p>
+                    </li>
+                    <li class="mb-3">
+                        <h3 class="font-bold text-lg text-green-700">A Graduated Response to Barriers</h3>
+                        <p>Our interventions follow a stepped approach—starting with informal offers of support and escalating only where needed. Support is proportionate, personalised, and designed to remove specific barriers to attendance.</p>
+                    </li>
+                    <li class="mb-3">
+                        <h3 class="font-bold text-lg text-green-700">Clear Systems and Consistent Communication</h3>
+                        <p>We use robust systems to track, respond to, and improve attendance. Our communication is always clear and consistent—with pupils, families, and external partners—ensuring everyone understands expectations, support available, and the next steps.</p>
+                    </li>
+                </ol>
+                <div class="tip-box mt-6">
+                    Ensure all attendance communications with families are supportive in tone, focusing on building trust and partnership rather than creating anxiety or conflict.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/ElevenLabs_2025-05-30T20_05_47_Archer%20-%20Conversational_pvc_sp100_s50_sb75_se14_b_m2.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide3">
+            <div class="slide-header">
+                <div class="slide-title">Why Attendance Matters</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">3/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Impact of Attendance on Pupil Outcomes</h2>
+                <div class="info-box">
+                    <p class="font-bold">Research shows that pupils with no absence are 1.3 times more likely to achieve age-related expectations, and 2.8 times more likely to achieve greater depth than pupils with attendance below 95%.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Educational Impact</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Regular attenders make better progress academically</li>
+                            <li>Missing lessons creates gaps in learning</li>
+                            <li>Higher attendance = higher achievement</li>
+                            <li>Early patterns of attendance in primary school often continue into secondary education</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Wider Benefits</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Develops consistent learning habits</li>
+                            <li>Builds social skills and relationships</li>
+                            <li>Improves wellbeing and mental health</li>
+                            <li>Acts as a safeguarding mechanism</li>
+                            <li>Prepares for future employment</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    When discussing attendance with parents, use concrete examples of learning their child has missed rather than just percentages, which can seem abstract.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%203%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide4">
+            <div class="slide-header">
+                <div class="slide-title">Whole School Approach</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">4/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Attendance is Everyone's Business</h2>
+                <div class="info-box">
+                    <p>"Good attendance begins with school being somewhere pupils want to be and therefore the foundation of securing good attendance is that school is a calm, orderly, safe, and supportive environment where all pupils are keen and ready to learn." - DfE Guidance, 2024</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">Leadership Components</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Senior Attendance Champion (member of SLT)</li>
+                            <li>Clear attendance policy understood by all</li>
+                            <li>Regular monitoring of attendance data</li>
+                            <li>Strategic allocation of resources</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">Whole School Elements</h3>
+                        <ul class="list-disc ml-6">
+                            <li>All staff aware of their role in promoting attendance</li>
+                            <li>Regular celebration of good attendance</li>
+                            <li>Consistent approach to managing absence</li>
+                            <li>Partnership with families and external agencies</li>
+                            <li><i class="fas fa-heart text-red-500"></i> Listen and understand pupil and family circumstances</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    Make attendance visible throughout the school environment with displays, certificates, and regular mentions in assemblies and newsletters.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%204%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide4-1">
+            <div class="slide-header">
+                <div class="slide-title">Whole-School Attendance Visual</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">5/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Our Holistic Approach to Attendance</h2>
+                <div class="infographic">
+                    <div class="text-center mb-8">
+                        <div class="bg-blue-100 p-4 rounded-full inline-block mb-4">
+                            <div class="bg-blue-600 p-6 rounded-full text-white font-bold">
+                                <p class="text-lg">Safe, Calm, Welcoming Environment</p>
+                                <p class="text-sm">with Excellent Teaching & Learning</p>
+                            </div>
+                        </div>
+                        <p class="font-bold text-blue-600 text-lg">MAKING SCHOOL A PLACE WHERE CHILDREN WANT TO BE</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-green-100 p-3 rounded-lg border border-green-300">
+                            <i class="fas fa-chart-line text-3xl text-green-600 mb-2"></i>
+                            <p class="font-bold">Data Tracking</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-lg border border-purple-300">
+                            <i class="fas fa-users text-3xl text-purple-600 mb-2"></i>
+                            <p class="font-bold">Building Relationships</p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-lg border border-red-300">
+                            <i class="fas fa-phone text-3xl text-red-600 mb-2"></i>
+                            <p class="font-bold">Parental Communication</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-lg border border-yellow-300">
+                            <i class="fas fa-shield-alt text-3xl text-yellow-600 mb-2"></i>
+                            <p class="font-bold">Safeguarding</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg border border-blue-300">
+                            <i class="fas fa-hands-helping text-3xl text-blue-600 mb-2"></i>
+                            <p class="font-bold">SEND & Pastoral Support</p>
+                        </div>
+                        <div class="bg-indigo-100 p-3 rounded-lg border border-indigo-300">
+                            <i class="fas fa-handshake text-3xl text-indigo-600 mb-2"></i>
+                            <p class="font-bold">Early Help</p>
+                        </div>
+                        <div class="bg-pink-100 p-3 rounded-lg border border-pink-300">
+                            <i class="fas fa-trophy text-3xl text-pink-600 mb-2"></i>
+                            <p class="font-bold">Recognition & Rewards</p>
+                        </div>
+                        <div class="bg-teal-100 p-3 rounded-lg border border-teal-300">
+                            <i class="fas fa-clipboard-check text-3xl text-teal-600 mb-2"></i>
+                            <p class="font-bold">Consistent Processes</p>
+                        </div>
+                        <div class="bg-orange-100 p-3 rounded-lg border border-orange-300">
+                            <i class="fas fa-building text-3xl text-orange-600 mb-2"></i>
+                            <p class="font-bold">Multi-Agency Support</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    Always consider which elements of this holistic approach might be missing or need strengthening for individual pupils with attendance concerns.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%205%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide5">
+            <div class="slide-header">
+                <div class="slide-title">Role of Attendance Staff</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">6/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Key Responsibilities</h2>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Assistant Principal (Attendance Lead)</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Strategic leadership of attendance</li>
+                            <li>Development of attendance policy</li>
+                            <li>Line management of attendance team</li>
+                            <li>Reporting to SLT and Governors</li>
+                            <li>Leading whole-school attendance initiatives</li>
+                        </ul>
+                        
+                        <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">Attendance Officer & Welfare Manager</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Daily monitoring of attendance</li>
+                            <li>First response calls and home visits</li>
+                            <li>Regular data analysis</li>
+                            <li>Working with families to improve attendance</li>
+                            <li>Promote and deliver recognition and rewards</li>
+                            <li>Build relationships and trust with pupils and families</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Reception Staff</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Recording late arrivals</li>
+                            <li>Taking messages about absences</li>
+                            <li>Supporting first day calling</li>
+                            <li>Welcoming pupils and families</li>
+                        </ul>
+                        
+                        <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">DSL</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Safeguarding oversight of absence concerns</li>
+                            <li>Supporting vulnerable pupils</li>
+                            <li>Multi-agency liaison</li>
+                        </ul>
+                        
+                        <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">SEND Coordinators</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Supporting pupils with additional needs</li>
+                            <li>Developing personalized attendance plans</li>
+                            <li>Sarah Morris for Key Stage 1 (KS1) and Sara Fairchild for Key Stage 2 (KS2)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    Regular team meetings ensure a coordinated approach to attendance management, with clear communication between all staff members involved.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <source src="https://github.com/CJLee1970/pathwaypresentation/raw/5045f72a5544c402ad5be3601e17aaa8f979fba7/audio%206%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide6">
+            <div class="slide-header">
+                <div class="slide-title">Early Intervention Strategies</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">7/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>First Response to Attendance Concerns</h2>
+                <div class="col-3">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">Contact with Parents and Guardians</h3>
+                        <ul class="list-disc ml-6">
+                            <li>First day calling for all absences</li>
+                            <li>Letter 1 for early patterns (3 days in 6 weeks)</li>
+                            <li>Supportive conversations to understand reasons</li>
+                            <li>Sharing impact on learning</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">Data Monitoring</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Use Bromcom MIS to identify patterns</li>
+                            <li>Weekly attendance reviews</li>
+                            <li>Track by pupil, class, year group</li>
+                            <li>Identify vulnerable groups</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">Pupil Voice</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Age-appropriate conversations</li>
+                            <li>Understanding barriers</li>
+                            <li>Scaling activities</li>
+                            <li>Identify trusted adults</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-green-700">Simple Interventions</h3>
+                <div class="col-2">
+                    <ul class="list-disc ml-6">
+                        <li>Attendance buddies</li>
+                        <li>Breakfast club</li>
+                        <li>Meet and greet</li>
+                        <li>Daily check-ins</li>
+                    </ul>
+                    <ul class="list-disc ml-6">
+                        <li>Reward systems</li>
+                        <li>Walking bus</li>
+                        <li>Class attendance competitions</li>
+                        <li>Tailored support for specific needs</li>
+                    </ul>
+                </div>
+                <div class="tip-box mt-4">
+                    When reaching out to families, always start with a genuine interest in understanding their challenges rather than immediately focusing on compliance.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/5045f72a5544c402ad5be3601e17aaa8f979fba7/audio%207%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide7">
+            <div class="slide-header">
+                <div class="slide-title">Attendance Data Tracking</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">8/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Monitoring Attendance Effectively</h2>
+                <div class="info-box">
+                    <p>Effective attendance tracking is essential for early identification of concerns and targeted interventions.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Monitoring Levels</h3>
+                        <ul class="list-disc ml-6">
+                            <li><span class="traffic-light green"></span> 97%+ Excellent attendance</li>
+                            <li><span class="traffic-light green"></span> 95-96.9% Good attendance</li>
+                            <li><span class="traffic-light amber"></span> 92-94.9% Requires improvement</li>
+                            <li><span class="traffic-light red"></span> 90-91.9% Concerning attendance</li>
+                            <li><span class="traffic-light red"></span> Below 90% Persistent absence</li>
+                            <li><span class="traffic-light red"></span> Below 50% Severe absence</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Analysis Approaches</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Daily tracking of absences</li>
+                            <li>Weekly patterns (e.g., Monday/Friday absences)</li>
+                            <li>Subject or session patterns</li>
+                            <li>Absence code analysis</li>
+                            <li>Group tracking (SEND, PP, EAL, etc.)</li>
+                            <li>Benchmarking against national data</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">Key Reports from Bromcom MIS</h3>
+                <div class="col-2">
+                    <ul class="list-disc ml-6">
+                        <li>Daily absence reports</li>
+                        <li>Persistent absence tracker</li>
+                        <li>Group analysis reports</li>
+                    </ul>
+                    <ul class="list-disc ml-6">
+                        <li>Code analysis reports</li>
+                        <li>Attendance trend analysis</li>
+                        <li>Individual pupil attendance profiles</li>
+                    </ul>
+                </div>
+                <div class="tip-box mt-4">
+                    Look beyond just overall percentages - analyzing patterns by day of week, time of day, and specific lessons can reveal underlying issues that need addressing.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/5045f72a5544c402ad5be3601e17aaa8f979fba7/audio%208%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide7-1">
+            <div class="slide-header">
+                <div class="slide-title">Daily Attendance Process Flowchart</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">9/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Daily Attendance Monitoring Routine</h2>
+                <div class="flowchart">
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">8:00am-8:15am</div>
+                        <div class="flowchart-task">Update attendance and absence codes from the previous day</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">8:15am-8:30am</div>
+                        <div class="flowchart-task">Check Absence Line, Email and MyChildAtSchool app for absence messages and update BromCom</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">8:30am-9:30am</div>
+                        <div class="flowchart-task">Meet and greet parents and students, challenge lateness</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">9:30am</div>
+                        <div class="flowchart-task">Send absence text messages as part of safeguarding responsibilities</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">9:45am</div>
+                        <div class="flowchart-task">Send late text messages to challenge punctuality and highlight lost learning</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">By 10:30am</div>
+                        <div class="flowchart-task">Complete follow-up phone calls for all unexplained absences</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">10:30am</div>
+                        <div class="flowchart-task">Begin home visits for vulnerable children or those at risk of persistent absence</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">U-Code Text</div>
+                        <div class="flowchart-task">Send very late text for arrivals after registration closes at 9:30am</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">12:00pm</div>
+                        <div class="flowchart-task">Additional home visits for priority cases</div>
+                    </div>
+                    <div class="flowchart-step">
+                        <div class="flowchart-time">From 2:00pm</div>
+                        <div class="flowchart-task">Focus on administration, meetings, and planning for next day</div>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    Consistency in following this daily process is key to ensuring all absence is followed up promptly and no vulnerable pupils are missed.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%209%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide8">
+            <div class="slide-header">
+                <div class="slide-title">Assess-Plan-Do-Review Cycle</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">10/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Systematic Approach to Attendance Support</h2>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">ASSESS</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Determine factors preventing regular attendance</li>
+                            <li>Consider education, health, and care needs</li>
+                            <li>Gather student and parent voice</li>
+                            <li>Identify barriers to attendance</li>
+                            <li>Analyze attendance patterns</li>
+                            <li>Utilise a 'strengths-based' and 'trauma-informed' approach</li>
+                        </ul>
+                        <h3 class="font-bold text-lg mb-2 mt-4 text-green-700">PLAN</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Develop Attendance Improvement Plan</li>
+                            <li>Collaborate with student, parents, and staff</li>
+                            <li>Set realistic timescales</li>
+                            <li>Clearly define responsibilities</li>
+                            <li>Share plan with all parties</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">DO</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Implement the support plan</li>
+                            <li>Ensure all are aware of their roles</li>
+                            <li>Provide consistent support</li>
+                            <li>Maintain regular contact</li>
+                            <li>Document all interventions</li>
+                        </ul>
+                        <h3 class="font-bold text-lg mb-2 mt-4 text-green-700">REVIEW</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Regularly review effectiveness</li>
+                            <li>Seek feedback from student and family</li>
+                            <li>Evaluate if desired outcomes achieved</li>
+                            <li>Check all parties fulfilling their roles</li>
+                            <li>Adjust plan based on findings</li>
+                            <li>Consider escalation if necessary</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    Document each stage of the APDR cycle thoroughly as this evidence may be needed if attendance doesn't improve and formal steps become necessary.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2010%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide9">
+            <div class="slide-header">
+                <div class="slide-title">Supporting EBSA</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">11/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Emotionally Based School Avoidance</h2>
+                <div class="info-box">
+                    <p>EBSA is different from truanting or 'willful' non-attendance as there is often an underlying presence of anxiety or emotional upset and no significant anti-social behavior.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Common Signs</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Physical complaints (stomachaches, headaches)</li>
+                            <li>Reluctance to separate from parents</li>
+                            <li>Distress when preparing for school</li>
+                            <li>Heightened anxiety in school</li>
+                            <li>Difficulty with transitions or changes</li>
+                            <li>Specific school-based fears</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Support Strategies</h3>
+                        <ul class="list-disc ml-6">
+                            <li>'Soft landing' in the morning</li>
+                            <li>Consistent routines and visual timetables</li>
+                            <li>Trusted adult check-ins</li>
+                            <li>'Reset moments' throughout the day</li>
+                            <li>Gradual reintegration plans</li>
+                            <li>Safe spaces within school</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">Resources Available</h3>
+                <p>Consult with SENCO and Pastoral teams for access to:</p>
+                <div class="col-3">
+                    <ul class="list-disc ml-6">
+                        <li>EBSA Card Sort activity</li>
+                        <li>Three Houses tool</li>
+                        <li>Strengths & Difficulties questionnaires</li>
+                    </ul>
+                    <ul class="list-disc ml-6">
+                        <li>Visual scaling resources</li>
+                        <li>School Stress Survey</li>
+                        <li>Ideal School activity</li>
+                    </ul>
+                    <ul class="list-disc ml-6">
+                        <li>Attendance Improvement Plans</li>
+                        <li>EBSA guidance documents</li>
+                        <li>Sensory audit tools</li>
+                    </ul>
+                </div>
+                <div class="tip-box mt-4">
+                    Always remember EBSA is about anxiety, not defiance. A supportive, understanding approach is more effective than punitive measures.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2011%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide10">
+            <div class="slide-header">
+                <div class="slide-title">Capturing Voice and Partnership</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">12/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Understanding the Barriers to Attendance</h2>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Pupil Voice Tools</h3>
+                        <ul class="list-disc ml-6">
+                            <li><strong>Three Houses</strong> - exploring worries, positives, and hopes</li>
+                            <li><strong>Scaling Questions</strong> - visual confidence scales</li>
+                            <li><strong>Drawing Activities</strong> - "My Ideal School"</li>
+                            <li><strong>School Stress Survey</strong> - identifying triggers</li>
+                            <li><strong>Strengths and Difficulties Questionnaire</strong></li>
+                            <li><strong>EBSA Card Sort</strong> - exploring reasons for avoidance</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Parent Voice Approaches</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Structured conversations using key questions</li>
+                            <li>Mapping across education, health and care</li>
+                            <li>Focused discussions on:
+                                <ul class="list-disc ml-6">
+                                    <li>What's going well?</li>
+                                    <li>What are we worried about?</li>
+                                    <li>What are the next steps?</li>
+                                </ul>
+                            </li>
+                            <li>Attendance Improvement Plans</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-purple-700">Building True Partnership</h3>
+                <div class="col-2">
+                    <ul class="list-disc ml-6">
+                        <li>Focus on building trust</li>
+                        <li>Listen without judgment</li>
+                        <li>Recognize parents as experts on their child</li>
+                        <li>Document all discussions thoroughly</li>
+                        <li>Follow through on agreed actions</li>
+                        <li>Communicate regularly about progress</li>
+                        <li>Celebrate small improvements</li>
+                        <li>Be flexible and responsive</li>
+                    </ul>
+                </div>
+                <div class="tip-box mt-4">
+                    Using age-appropriate tools for gathering pupil voice can reveal barriers to attendance that might not otherwise be identified through adult conversations alone.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2012%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide11">
+            <div class="slide-header">
+                <div class="slide-title">Formal Support Options</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">13/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Additional Support for Attendance Concerns</h2>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Internal Support</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Pastoral support programs</li>
+                            <li>Tailored SEND interventions</li>
+                            <li>Mentoring programs</li>
+                            <li>In-school therapeutic support</li>
+                            <li>Parent support groups</li>
+                            <li>Attendance clinics</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">External Agencies</h3>
+                        <ul class="list-disc ml-6">
+                            <li><strong>Inclusion & Attendance</strong> - Referral to Harriet Stevens, Inclusion & Attendance Specialist</li>
+                            <li><strong>Family Intervention Service (FIS)</strong> - Complete EHA Form</li>
+                            <li><strong>Community Youth Team</strong> - For vulnerable pupils</li>
+                            <li><strong>School Nursing Team</strong> - For health concerns</li>
+                            <li><strong>Healthy Minds</strong> - For mental health support</li>
+                            <li><strong>Door 43</strong> - Mental health resource</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">Referral Process</h3>
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">Complete internal assessment and support plan</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Discuss with family and gain consent for referral</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">Submit referral form to appropriate service</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">Maintain school support while waiting for service</div>
+                </div>
+                <div class="tip-box mt-4">
+                    Don't wait for external support to begin helping a pupil - continue with school-based strategies while external referrals are processed.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2013%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide12">
+            <div class="slide-header">
+                <div class="slide-title">Attendance Contracts</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">14/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Formalizing Support Through Contracts</h2>
+                <div class="info-box">
+                    <p>Attendance Contracts are formal written agreements between parents, school, and sometimes the Local Authority. They are not punitive but provide clear expectations, support, and accountability.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">When to Use Contracts</h3>
+                        <ul class="list-disc ml-6">
+                            <li>When voluntary support hasn't worked</li>
+                            <li>When parents are engaging but attendance isn't improving</li>
+                            <li>Before considering legal intervention</li>
+                            <li>To provide clarity on expectations</li>
+                            <li>To document agreed support</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Key Components</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Attendance targets</li>
+                            <li>School responsibilities and support</li>
+                            <li>Parent commitments</li>
+                            <li>Pupil commitments (age appropriate)</li>
+                            <li>Review dates</li>
+                            <li>Consequences of non-compliance</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">Process for Implementation</h3>
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">Invite parents to formal meeting to discuss contract</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Collaboratively create contract with specific actions and timescales</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">All parties sign to confirm commitment</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">Regular reviews to monitor progress</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">Next steps if contract not successful (escalation or revision)</div>
+                </div>
+                <div class="tip-box mt-4">
+                    Always ensure contracts are specific, measurable, and achievable - vague terms make it difficult to monitor progress and compliance.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2014%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide13">
+            <div class="slide-header">
+                <div class="slide-title">Legal Framework Overview</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">15/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Understanding the Legal Context</h2>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Key Legislation</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Education Act 1996</li>
+                            <li>Education (Pupil Registration) Regulations 2024</li>
+                            <li>Education (Penalty Notices) Regulations 2024</li>
+                            <li>Children Act 1989</li>
+                            <li>Anti-social Behaviour Act 2003</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Parental Responsibilities</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Ensure child receives efficient full-time education</li>
+                            <li>Ensure regular attendance at registered school</li>
+                            <li>Inform school of reason for any absence</li>
+                            <li>Request permission for planned absences</li>
+                            <li>Engage with support offered</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-purple-700">Important Legal Considerations</h3>
+                <div class="info-box">
+                    <p>Before pursuing any legal intervention, schools must follow the Attendance Legal Process Checklist as referenced in Sheffield's "Working Together to Improve School Attendance" guidance, 2024.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Legal Intervention Options</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Penalty Notices</li>
+                            <li>Education Supervision Orders</li>
+                            <li>Prosecution under Section 444</li>
+                            <li>Parenting Orders</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Support-First Approach</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Exhausting all support options first</li>
+                            <li>Documenting support provided</li>
+                            <li>Capturing parent and pupil voice</li>
+                            <li>Demonstrating a graduated response</li>
+                            <li>Showing how barriers were addressed</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    Always seek advice from the Inclusion & Attendance team before embarking on any legal process - they can provide guidance on appropriate next steps.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2015%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide14">
+            <div class="slide-header">
+                <div class="slide-title">National Framework for Penalty Notices</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">16/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>DfE Framework (August 2024)</h2>
+                <div class="info-box">
+                    <p>The new National Framework for Penalty Notices aims to create greater consistency in their use across England.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Key Changes</h3>
+                        <ul class="list-disc ml-6">
+                            <li>New national threshold for irregular attendance (10 sessions in 10 weeks)</li>
+                            <li>Increased fine amounts</li>
+                            <li>Each parent receives separate penalty notice for each child</li>
+                            <li>Limit of 2 penalty notices in 3-year period before escalation</li>
+                            <li>Mandatory consideration of penalty notices for term-time leave of 5+ days</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Fine Structure</h3>
+                        <ul class="list-disc ml-6">
+                            <li><strong>First offense:</strong> £80 per parent/per child if paid within 21 days, rising to £160 if paid within 28 days</li>
+                            <li><strong>Second offense (within 3 years):</strong> £160 per parent/per child with no reduction</li>
+                            <li><strong>Third offense (within 3 years):</strong> Direct to prosecution</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-blue-700">Implementation</h3>
+                <ul class="list-disc ml-6">
+                    <li>For term-time leave of 5+ days, home visits should be conducted by day 3 as specified in Sheffield Local Authority's attendance code of conduct to verify absence reason</li>
+                    <li>For irregular attendance, penalty notices must be considered for 10+ sessions of unauthorised absence in 10 weeks</li>
+                    <li>Sessions don't need to be consecutive</li>
+                    <li>Can be a combination of different types of unauthorised absence (e.g., lateness and holiday)</li>
+                    <li>Schools must demonstrate support offered before issuing notice</li>
+                </ul>
+                <div class="tip-box mt-4">
+                    Always ensure parents understand that penalty notices are issued per parent, per child - this can result in substantial financial penalties for families with multiple children.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2016%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide15">
+            <div class="slide-header">
+                <div class="slide-title">Penalty Notice Process</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">17/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Practical Steps for Penalty Notices</h2>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Required Documentation</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Attendance Legal Process checklist</li>
+                            <li>Head Teacher's Certificate</li>
+                            <li>Case Summary/Chronology</li>
+                            <li>Evidence of support offered</li>
+                            <li>Records of meetings with family</li>
+                            <li>Pupil and parent voice evidence</li>
+                            <li>Attendance register with comments</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Process Steps</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Consult with Inclusion & Attendance Social Worker</li>
+                            <li>Prepare documentation package</li>
+                            <li>Send all paperwork via Anycomms to LA Attendance Legal Team or the online PN Portal as directed by the LA</li>
+                            <li>LA reviews and decides whether to issue notice</li>
+                            <li>Monitor impact if notice issued</li>
+                            <li>Consider next steps if attendance doesn't improve</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-purple-700">Consider Statutory Defences</h3>
+                <ul class="list-disc ml-6">
+                    <li>Authorised absence granted by Head Teacher</li>
+                    <li>Sickness (with evidence) or unavoidable cause</li>
+                    <li>Religious observance</li>
+                    <li>Distance from school (if beyond statutory walking distance)</li>
+                    <li>Parent's trade or business requires travel</li>
+                    <li>SEND or EBSA considerations</li>
+                </ul>
+                <div class="tip-box mt-4">
+                    Always check that all parents with parental responsibility are included in the penalty notice request. This includes non-resident parents who have day-to-day responsibility for the child's education.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2017%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide16">
+            <div class="slide-header">
+                <div class="slide-title">Education Supervision Orders</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">18/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Alternative Legal Intervention</h2>
+                <div class="info-box">
+                    <p>An Education Supervision Order (ESO) is a court order that places a child under the supervision of the Local Authority, with the aim of ensuring they receive an appropriate education.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">When to Consider an ESO</h3>
+                        <ul class="list-disc ml-6">
+                            <li>When parents are trying but struggling to secure attendance</li>
+                            <li>When more intensive support is needed</li>
+                            <li>When specific barriers exist that need addressing</li>
+                            <li>Before prosecution in suitable cases</li>
+                            <li>Where relationship between home and school has broken down</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">ESO Process</h3>
+                        <ul class="list-disc ml-6">
+                            <li>LA applies to Family Court</li>
+                            <li>Court hearing with parents</li>
+                            <li>Appointment of supervisor</li>
+                            <li>Regular meetings with family</li>
+                            <li>Directions given to parents and child</li>
+                            <li>Initial 12-month duration (can be extended)</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-green-700">Benefits and Limitations</h3>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">Benefits</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Focus on support rather than punishment</li>
+                            <li>Independent supervisor can help rebuild trust</li>
+                            <li>Provides structure and accountability</li>
+                            <li>Can prevent need for prosecution</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-green-700">Limitations</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Requires court process</li>
+                            <li>Limited enforcement powers</li>
+                            <li>Relies on engagement</li>
+                            <li>Resource intensive</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    ESOs can be particularly effective when parents want their child to attend but are struggling with specific barriers or have lost control of the situation.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2018%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide16-1">
+            <div class="slide-header">
+                <div class="slide-title">Graduated Response Visual</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">19/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Progressive Steps to Address Attendance</h2>
+                <div class="graduated-response">
+                    <div class="response-step voluntary">
+                        <h3 class="font-bold text-green-700">Listening and Support</h3>
+                        <p>Initial contact with family to understand barriers and offer voluntary support</p>
+                        <p class="text-sm italic">Support-focused conversations, first response calls, building relationship</p>
+                    </div>
+                    
+                    <div class="response-step voluntary">
+                        <h3 class="font-bold text-green-700">Attendance Improvement Plans</h3>
+                        <p>Collaborative plans with specific strategies and regular reviews</p>
+                        <p class="text-sm italic">Personalized approach addressing specific barriers identified</p>
+                    </div>
+                    
+                    <div class="response-step voluntary">
+                        <h3 class="font-bold text-green-700">Early Help and Inclusion & Attendance Support</h3>
+                        <p>Involving additional services and specialists to address wider needs</p>
+                        <p class="text-sm italic">May include referrals to various agencies based on specific needs</p>
+                    </div>
+                    
+                    <div class="response-step formal">
+                        <h3 class="font-bold text-yellow-700">Formalizing Interventions with Attendance Contracts</h3>
+                        <p>Written agreement between school, parents and pupil with clear expectations</p>
+                        <p class="text-sm italic">Provides structure, accountability and documented commitments</p>
+                    </div>
+                    
+                    <div class="response-step legal">
+                        <h3 class="font-bold text-red-700">Legal Interventions: Education Supervision Orders</h3>
+                        <p>Court order placing child under LA supervision to ensure appropriate education</p>
+                        <p class="text-sm italic">Support-focused legal intervention with appointed supervisor</p>
+                    </div>
+                    
+                    <div class="response-step legal">
+                        <h3 class="font-bold text-red-700">Penalty Notices</h3>
+                        <p>Financial penalties for unauthorized absence in line with National Framework</p>
+                        <p class="text-sm italic">Used when support hasn't been effective or engaged with</p>
+                    </div>
+                    
+                    <div class="response-step legal">
+                        <h3 class="font-bold text-red-700">Criminal Prosecution for Educational Neglect</h3>
+                        <p>Last resort legal action for persistent non-attendance without improvement</p>
+                        <p class="text-sm italic">Used only after all other approaches have been exhausted</p>
+                    </div>
+                </div>
+                <div class="tip-box mt-4">
+                    Always remember that support remains present throughout the entire process, even when moving into more formal and legal interventions.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2019%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide17">
+            <div class="slide-header">
+                <div class="slide-title">Prosecution Pathway</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">20/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Last Resort Intervention</h2>
+                <div class="info-box">
+                    <p>Prosecution under Section 444(1) or 444(1A) of the Education Act 1996 is always a last resort when all other approaches have been exhausted.</p>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Two Offence Types</h3>
+                        <ul class="list-disc ml-6">
+                            <li><strong>Section 444(1):</strong> Simple offence of irregular attendance (max fine £1,000)</li>
+                            <li><strong>Section 444(1A):</strong> Knowing that child is not attending regularly and failing to ensure attendance (max fine £2,500 and/or imprisonment)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Evidence Required</h3>
+                        <ul class="list-disc ml-6">
+                            <li>Comprehensive attendance record</li>
+                            <li>Documentation of all support offered</li>
+                            <li>Records of communication with family</li>
+                            <li>Actions taken to address barriers</li>
+                            <li>Impact of non-attendance on education</li>
+                            <li>APDR cycle evidence</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mb-2 mt-4 text-purple-700">Process Overview</h3>
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">Consultation with Inclusion & Attendance Social Worker</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Preparation of evidence file</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">LA legal team review and decision</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">Court summons issued if proceeding</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">Court hearing and potential sentencing</div>
+                </div>
+                <div class="tip-box mt-4">
+                    Even when prosecution becomes necessary, continue to offer support to the family throughout and after the legal process to help improve attendance.
+                </div>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2020%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="slide" id="slide18">
+            <div class="slide-header">
+                <div class="slide-title">Contacts and Resources</div>
+                <img src="https://page1.genspark.site/v1/base64_upload/4dee69ae2c96e09777e289d27c0e1cc2" alt="Hartley Brook Primary Logo" class="slide-logo">
+                <div class="slide-number">21/21</div>
+            </div>
+            <div class="slide-content">
+                <h2>Key Contacts</h2>
+                <div class="col-2">
+                    <div>
+                        <h3 class="font-bold text-lg mb-3 text-blue-700">Key School Contacts</h3>
+                        <table class="contact-table">
+                            <tr>
+                                <th>Role</th>
+                                <th>Name</th>
+                                <th>Contact</th>
+                            </tr>
+                            <tr>
+                                <td>Assistant Principal (Attendance Lead)</td>
+                                <td>Cheryl Kemp</td>
+                                <td>Cheryl.Kemp@astreahartleybrook.org</td>
+                            </tr>
+                            <tr>
+                                <td>Attendance Manager</td>
+                                <td>CJ Lee</td>
+                                <td>christopher.lee@astreahartleybrook.org</td>
+                            </tr>
+                            <tr>
+                                <td>Attendance Officer</td>
+                                <td>Imogen Allen</td>
+                                <td>Imogen.Allen@astreahartleybrook.org</td>
+                            </tr>
+                            <tr>
+                                <td>DSL</td>
+                                <td>Debbie Hughes</td>
+                                <td>Debbie.Hughes@astreahartleybrook.org</td>
+                            </tr>
+                            <tr>
+                                <td>SEND Coordinators</td>
+                                <td>Sarah Morris (KS1) & Sara Fairchild (KS2)</td>
+                                <td>Sarah.Morris@astreahartleybrook.org<br>Sara.Fairchild@astreahartleybrook.org</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-3 text-blue-700">External Contacts</h3>
+                        <table class="contact-table">
+                            <tr>
+                                <th>Role</th>
+                                <th>Name</th>
+                                <th>Contact</th>
+                            </tr>
+                            <tr>
+                                <td>Inclusion & Attendance Link Worker</td>
+                                <td>Katie Tame</td>
+                                <td>katherine.tame@sheffield.gov.uk</td>
+                            </tr>
+                            <tr>
+                                <td>Inclusion & Attendance Specialist</td>
+                                <td>Harriet Stevens</td>
+                                <td>Harriet.Stevens@sheffield.gov.uk</td>
+                            </tr>
+                            <tr>
+                                <td>Bromcom MIS Support</td>
+                                <td></td>
+                                <td>support@bromcom.com</td>
+                            </tr>
+                            <tr>
+                                <td>Sheffield Inclusion & Attendance Team</td>
+                                <td></td>
+                                <td>Sheffieldinclusion&attendance@sheffield.gov.uk</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <h3 class="font-bold text-lg mt-4 mb-2 text-blue-700">Ongoing Support</h3>
+                <p>The Attendance Welfare Manager will conduct weekly supervision meetings with the Attendance Officer to highlight effectiveness of workflows, the school calendar, and target specific interventions.</p>
+                <p>Bi-weekly attendance review meetings take place between the Attendance Welfare Manager and the Assistant Principal to address specific strategic and operational issues and discuss implementation of new activities.</p>
+                <p>The Attendance Team attends a termly meeting with the Principal, Assistant Principal and School Manager to discuss the impact of whole school measures to improve attendance and punctuality.</p>
+                <p>The Attendance Welfare Manager in their role as Deputy DSL attends a weekly meeting with the DSL to ensure we implement our early help and early identification strategies with known vulnerable students and families and emerging cases.</p>
+                <p>The Attendance Welfare Manager and Assistant Principal attend a bi-weekly Behaviour, Attendance, Safeguarding and Inclusion Meeting (BASI) to address emerging concerns of vulnerable students and ensure a joined-up approach, both internally and linked to external agency support. These meetings ensure interventions are delivered proportionately, consistently and as early as possible.</p>
+            </div>
+            <div class="audio-container">
+                <span class="audio-label">Slide Audio</span>
+                <audio controls preload="auto" onerror="console.error('Audio failed to load or play:', this.src);">
+                    <source src="https://github.com/CJLee1970/pathwaypresentation/raw/refs/heads/main/audio%2021%20pathway%20presentation.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="navigation mt-4">
+            <button id="prevBtnBottom" class="nav-button"><i class="fas fa-chevron-left"></i> Previous</button>
+            <div id="slideCounterBottom" class="text-center">Slide 1 of 21</div>
+            <button id="nextBtnBottom" class="nav-button">Next <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtnBottom = document.getElementById('prevBtnBottom');
+            const nextBtnBottom = document.getElementById('nextBtnBottom');
+            const slideCounter = document.getElementById('slideCounter');
+            const slideCounterBottom = document.getElementById('slideCounterBottom');
+            let currentSlide = 0;
+
+            function updateSlideCounter() {
+                slideCounter.textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
+                slideCounterBottom.textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
+            }
+
+            function showSlide(n) {
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Stop any playing audio
+                const audioElements = document.querySelectorAll('audio');
+                audioElements.forEach(audio => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                });
+                
+                // Show the current slide
+                slides[n].classList.add('active');
+                
+                // Update buttons
+                prevBtn.disabled = n === 0;
+                nextBtn.disabled = n === totalSlides - 1;
+                prevBtnBottom.disabled = n === 0;
+                nextBtnBottom.disabled = n === totalSlides - 1;
+                
+                // Update counter
+                updateSlideCounter();
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            }
+
+            // Event listeners
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtnBottom.addEventListener('click', nextSlide);
+            prevBtnBottom.addEventListener('click', prevSlide);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            });
+
+            // Initialize
+            updateSlideCounter();
+            showSlide(currentSlide);
+        });
+    </script>
+</body>
+</html>
